@@ -16,7 +16,7 @@ def disp_algs():
         print("{}:{} --> {}".format(alg.provider().name(), alg.name(), alg.displayName()))
 
 
-def make_samples(aom_list=None, output_dir=None, input_layer_name=None):
+def make_samples(aom_path_list, aom_name_list, output_dir, input_layer_name):
     """
     Use the 'gdal:cliprasterbymasklayer' to extract AOMs by iterating over a list of file paths for the AOM shape
     files.
@@ -26,9 +26,11 @@ def make_samples(aom_list=None, output_dir=None, input_layer_name=None):
     :param input_layer_name: The layer from which the AOMs will be extracted.
     :return: None
     """
-    for aom in aom_list:
+    for (aom_path, aom_name) in zip(aom_path_list, aom_name_list):
 
-        output_path = os.path.join(output_dir, "{0}.tif".format(aom))
+        print('[INFO] Output_dir: {0}'.format(output_dir))
+
+        output_path = os.path.join(output_dir, "{0}.tif".format(aom_name[:-4]))
 
         parameters = {
             'ALPHA_BAND': False,
@@ -36,7 +38,7 @@ def make_samples(aom_list=None, output_dir=None, input_layer_name=None):
             'DATA_TYPE': 1,
             'INPUT': input_layer_name,
             'KEEP_RESOLUTION': True,
-            'MASK': aom,
+            'MASK': aom_path,
             'SOURCE_CRS': QgsCoordinateReferenceSystem('EPSG:3857'),
             'TARGET_CRS': QgsCoordinateReferenceSystem('EPSG:3857'),
             'NODATA': None,
@@ -103,7 +105,8 @@ if __name__ == '__main__':
 
         # Process sample spaces.
         params = {
-            'aom_list': vector_filepath_list,
+            'aom_path_list': vector_filepath_list,
+            'aom_name_list': vector_filename_list,
             'output_dir': directory_path,
             'input_layer_name': raster_path,
         }
