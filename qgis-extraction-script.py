@@ -28,9 +28,7 @@ def make_samples(aom_path_list, aom_name_list, output_dir, input_layer_name):
     """
     for (aom_path, aom_name) in zip(aom_path_list, aom_name_list):
 
-        print('[INFO] Output_dir: {0}'.format(output_dir))
-
-        output_path = os.path.join(output_dir, "{0}.tif".format(aom_name[:-4]))
+        output_path = os.path.join(output_dir, "{0}.tif".format(aom_name[:-5]))
 
         parameters = {
             'ALPHA_BAND': False,
@@ -47,8 +45,6 @@ def make_samples(aom_path_list, aom_name_list, output_dir, input_layer_name):
             'Y_RESOLUTION': None,
             'OUTPUT': output_path,
         }
-
-        print('[INFO] Writing AOM to: {0}'.format(output_path))
 
         processing.run('gdal:cliprasterbymasklayer', parameters)
 
@@ -98,7 +94,7 @@ if __name__ == '__main__':
 
     # Create an out sub-directory.
     for (raster, raster_path) in zip(raster_filename_list, raster_filepath_list):
-        directory_path = os.path.join(output_directory, "{0}-extractions".format(raster[:-4]))
+        directory_path = os.path.join(output_directory, "{0}_extractions".format(raster[:-4]))
         print('[INFO] Creating output directory at: {0}'.format(directory_path))
         if not os.path.exists(directory_path):
             os.makedirs(directory_path)
